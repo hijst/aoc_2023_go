@@ -1,30 +1,14 @@
 package main
 
 import (
-	"bufio"
+	"aoc_2023_go/util"
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
 )
 
 func main() {
-	readFile, err := os.Open("input.txt")
-	if err != nil {
-		fmt.Println(err)
-	}
-	fileScanner := bufio.NewScanner(readFile)
-
-	fileScanner.Split(bufio.ScanLines)
-
-	var lines []string
-
-	for fileScanner.Scan() {
-		lines = append(lines, fileScanner.Text())
-	}
-
-	readFile.Close()
-
+	lines, _ := util.ReadFileLines("")
 	one(lines)
 	two(lines)
 }

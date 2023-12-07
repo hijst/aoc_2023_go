@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	lines, _ := util.ReadFileLinesFromSubdirectory("", "input.txt")
+	lines, _ := util.ReadFileLines("")
 	start := time.Now()
 
 	sum := 0

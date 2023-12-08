@@ -3,12 +3,20 @@ package main
 import (
 	"aoc_2023_go/util"
 	"fmt"
+	"time"
 )
 
 func main() {
 	lines, _ := util.ReadFileLines("")
+	fmt.Println("______part_1______")
+	start := time.Now()
 	one(lines)
+	fmt.Printf("took %s\n", time.Since(start))
+
+	fmt.Println("______part_2______")
+	start = time.Now()
 	two(lines)
+	fmt.Printf("took %s\n", time.Since(start))
 }
 
 func one(lines []string) {

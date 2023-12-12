@@ -199,7 +199,7 @@ func updateGears(gears [][][]int64, grid [][]rune, number int64, row int, col in
 	for c := col; c < col+length; c++ {
 		gearNeighbourCoords = append(gearNeighbourCoords, getNeighbourGearCoords(row, c, grid)...)
 	}
-	deduped := deduplicateSplice(gearNeighbourCoords)
+	deduped := util.DeduplicateSplice(gearNeighbourCoords)
 
 	for _, d := range deduped {
 		gears[d.Row][d.Col] = append(gears[d.Row][d.Col], number)

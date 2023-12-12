@@ -45,3 +45,33 @@ func IntPow(n, m int) int {
 	}
 	return result
 }
+
+func DeduplicateSplice[T comparable](splice []T) []T {
+	uniqueElements := make(map[T]bool)
+	for _, c := range splice {
+		uniqueElements[c] = true
+	}
+
+	var res []T
+	for element := range uniqueElements {
+		res = append(res, element)
+	}
+
+	return res
+}
+
+func MapValues[K, V comparable](m map[K]V) []V {
+	var res []V
+	for _, v := range m {
+		res = append(res, v)
+	}
+	return res
+}
+
+func MapKeys[K, V comparable](m map[K]V) []K {
+	var res []K
+	for k := range m {
+		res = append(res, k)
+	}
+	return res
+}

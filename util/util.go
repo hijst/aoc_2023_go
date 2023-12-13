@@ -75,3 +75,20 @@ func MapKeys[K, V comparable](m map[K]V) []K {
 	}
 	return res
 }
+
+func GCD(a, b int64) int64 {
+	for b != 0 {
+		t := b
+		b = a % b
+		a = t
+	}
+	return a
+}
+
+func LCM(a, b int64, integers ...int64) int64 {
+	result := a * b / GCD(a, b)
+	for i := range integers {
+		result = LCM(result, integers[i])
+	}
+	return result
+}

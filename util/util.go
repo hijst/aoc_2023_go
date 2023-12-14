@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
+	"strings"
 )
 
 func ReadFileLines(subdirectory string) ([]string, error) {
@@ -91,4 +93,40 @@ func LCM(a, b int64, integers ...int64) int64 {
 		result = LCM(result, integers[i])
 	}
 	return result
+}
+
+func GetInt64Fields(ss []string) [][]int64 {
+	var res [][]int64
+	for _, s := range ss {
+		res = append(res, StrSliceToInt64Slice(strings.Fields(s)))
+	}
+
+	return res
+}
+
+func StrSliceToInt64Slice(ss []string) []int64 {
+	var res []int64
+	for _, s := range ss {
+		i, _ := strconv.ParseInt(s, 10, 64)
+		res = append(res, i)
+	}
+	return res
+}
+
+func PrintSlice[T any](s []T) {
+	for _, item := range s {
+		fmt.Println(item)
+	}
+}
+
+func LastElement[T any](s []T) T {
+	return s[len(s)-1]
+}
+
+func ReverseSlice[T any](s []T) []T {
+	var res []T
+	for i := len(s) - 1; i >= 0; i-- {
+		res = append(res, s[i])
+	}
+	return res
 }

@@ -130,3 +130,49 @@ func ReverseSlice[T any](s []T) []T {
 	}
 	return res
 }
+
+// GRID UTILS
+
+type Coord struct {
+	X int
+	Y int
+}
+
+func GetDirectNeighbourCoords[T any](x, y int, grid [][]T) []Coord {
+	var res []Coord
+
+	if x > 0 {
+		res = append(res, Coord{x - 1, y})
+	}
+	if y > 0 {
+		res = append(res, Coord{x, y - 1})
+	}
+	if x < len(grid[0])-1 {
+		res = append(res, Coord{x + 1, y})
+	}
+
+	if y < len(grid)-1 {
+		res = append(res, Coord{x, y + 1})
+	}
+
+	return res
+}
+
+func InSlice[T comparable](item T, slice []T) bool {
+	for _, candidate := range slice {
+		if candidate == item {
+			return true
+		}
+	}
+	return false
+}
+
+func RemoveFromSlice[T comparable](item T, slice []T) []T {
+	var res []T
+	for _, candidate := range slice {
+		if candidate != item {
+			res = append(res, candidate)
+		}
+	}
+	return res
+}

@@ -147,11 +147,11 @@ func GetDirectNeighbourCoords[T any](x, y int, grid [][]T) []Coord {
 	if y > 0 {
 		res = append(res, Coord{x, y - 1})
 	}
-	if x < len(grid[0])-1 {
+	if x < len(grid)-1 {
 		res = append(res, Coord{x + 1, y})
 	}
 
-	if y < len(grid)-1 {
+	if y < len(grid[0])-1 {
 		res = append(res, Coord{x, y + 1})
 	}
 
@@ -165,6 +165,15 @@ func InSlice[T comparable](item T, slice []T) bool {
 		}
 	}
 	return false
+}
+
+func FindIndex[T comparable](item T, slice []T) int {
+	for i, candidate := range slice {
+		if candidate == item {
+			return i
+		}
+	}
+	return -1
 }
 
 func RemoveFromSlice[T comparable](item T, slice []T) []T {

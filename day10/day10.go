@@ -27,7 +27,9 @@ func one(lines []string) {
 }
 
 func two(lines []string) {
-	fmt.Printf("part two not yet implemented, number of lines: %d\n", len(lines))
+	pipelines := readPipe(lines)
+	res := findArea(pipelines)
+	fmt.Printf("answer: %d\n", res)
 }
 
 func readPipe(lines []string) [][]string {
@@ -60,7 +62,7 @@ type Tile struct {
 func findArea(pipelines [][]string) int {
 	prev := findStartCoord(pipelines)
 	cur := findFirstPipe(pipelines, prev)
-	visited := []Tile{prev}
+	visited := []Tile{{coord: prev, value: pipelines[prev.X][prev.Y]}}
 	for pipelines[cur.X][cur.Y] != "S" {
 		visited = append(visited, Tile{cur, pipelines[cur.X][cur.Y]})
 		next := findNextPipe(cur, prev, pipelines)
@@ -70,35 +72,52 @@ func findArea(pipelines [][]string) int {
 
 	area := 0
 
-	for x, row := range pipelines {
-		for y := range row {
-			if isEnclosed(x, y, visited, pipelines) {
-				area += 1
+	var visitedCoords []util.Coord
+	for _, v := range visited {
+		visitedCoords = append(visitedCoords, v.coord)
+	}
+
+	pipelines = replaceStartCoord(pipelines, visitedCoords)
+	// replace all junk with ground
+	for x := range pipelines {
+		for y := range pipelines[x] {
+			if !util.InSlice(util.Coord{X: x, Y: y}, visitedCoords) {
+				pipelines[x][y] = "."
 			}
 		}
 	}
-	return area - len(visited)
-}
 
-func isEnclosed(x, y int, visited []Tile, pipelines [][]string) bool {
-	if x == 0 || x == len(pipelines)-1 || y == 0 || y == len(pipelines)-1 {
-		return false // on the edge
-	}
-	if util.InSlice(Tile{coord: util.Coord{X: x, Y: y}, value: pipelines[x][y]}, visited) {
-		return false // is a pipe
-	}
-	return leftOk(x, y, visited) && rightOk(x, y, visited) && upOk(x, y, visited) && downOk(x, y, visited)
-}
-
-func leftOk(x, y int, visited []Tile) bool {
-	var count int
-	var visitedCoords []util.Coord
-	for col := 0; col < y; col++ {
-		cur := util.Coord{X: x, Y: col}
-		if util.InSlice(cur, visitedCoords) {
+	for _, row := range pipelines {
+		prev := ""
+		isIn := false
+		for _, col := range row {
+			if isIn && col == "." {
+				area += 1
+			}
+			if col == "|" {
+				isIn = !isIn
+			}
+			if col == "J" {
+				if prev == "F" {
+					isIn = !isIn
+				}
+				prev = "J"
+			}
+			if col == "7" {
+				if prev == "L" {
+					isIn = !isIn
+				}
+				prev = "7"
+			}
+			if col == "F" {
+				prev = "F"
+			}
+			if col == "L" {
+				prev = "L"
+			}
 		}
 	}
-	return count%2 == 1
+	return area
 }
 
 func findStartCoord(pipelines [][]string) util.Coord {
@@ -159,4 +178,25 @@ func findNextPipe(cur util.Coord, prev util.Coord, pipelines [][]string) util.Co
 		candidates = util.RemoveFromSlice(util.Coord{X: cur.X - 1, Y: cur.Y}, candidates)
 	}
 	return candidates[0]
+}
+
+func replaceStartCoord(pipelines [][]string, vc []util.Coord) [][]string {
+	sc := findStartCoord(pipelines)
+	if (vc[1].X < sc.X && vc[len(vc)-1].Y > sc.Y) || (vc[len(vc)-1].X < sc.X && vc[1].Y > sc.Y) {
+		pipelines[sc.X][sc.Y] = "L"
+	}
+	if (vc[1].X > sc.X && vc[len(vc)-1].Y > sc.Y) || (vc[len(vc)-1].X > sc.X && vc[1].Y > sc.Y) {
+		pipelines[sc.X][sc.Y] = "F"
+	}
+	if (vc[1].X < sc.X && vc[len(vc)-1].Y < sc.Y) || (vc[len(vc)-1].X < sc.X && vc[1].Y < sc.Y) {
+		pipelines[sc.X][sc.Y] = "J"
+	}
+	if (vc[1].X > sc.X && vc[len(vc)-1].Y < sc.Y) || (vc[len(vc)-1].X > sc.X && vc[1].Y < sc.Y) {
+		pipelines[sc.X][sc.Y] = "7"
+	}
+
+	for _, line := range pipelines {
+		fmt.Println(line)
+	}
+	return pipelines
 }

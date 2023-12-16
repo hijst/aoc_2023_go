@@ -7,6 +7,11 @@ import (
 	"time"
 )
 
+type Tile struct {
+	coord util.Coord
+	value string
+}
+
 func main() {
 	lines, _ := util.ReadFileLines("")
 	fmt.Println("______part_1______")
@@ -54,11 +59,6 @@ func findFurthestLocation(pipelines [][]string) int {
 	return len(visited) / 2
 }
 
-type Tile struct {
-	coord util.Coord
-	value string
-}
-
 func findArea(pipelines [][]string) int {
 	prev := findStartCoord(pipelines)
 	cur := findFirstPipe(pipelines, prev)
@@ -76,7 +76,7 @@ func findArea(pipelines [][]string) int {
 	for _, v := range visited {
 		visitedCoords = append(visitedCoords, v.coord)
 	}
-
+	// replace start coordinate with the actual pipe
 	pipelines = replaceStartCoord(pipelines, visitedCoords)
 	// replace all junk with ground
 	for x := range pipelines {
@@ -88,7 +88,6 @@ func findArea(pipelines [][]string) int {
 	}
 
 	for _, row := range pipelines {
-		prev := ""
 		isIn := false
 		for _, col := range row {
 			if isIn && col == "." {
@@ -98,22 +97,10 @@ func findArea(pipelines [][]string) int {
 				isIn = !isIn
 			}
 			if col == "J" {
-				if prev == "F" {
-					isIn = !isIn
-				}
-				prev = "J"
-			}
-			if col == "7" {
-				if prev == "L" {
-					isIn = !isIn
-				}
-				prev = "7"
-			}
-			if col == "F" {
-				prev = "F"
+				isIn = !isIn
 			}
 			if col == "L" {
-				prev = "L"
+				isIn = !isIn
 			}
 		}
 	}
@@ -193,10 +180,6 @@ func replaceStartCoord(pipelines [][]string, vc []util.Coord) [][]string {
 	}
 	if (vc[1].X > sc.X && vc[len(vc)-1].Y < sc.Y) || (vc[len(vc)-1].X > sc.X && vc[1].Y < sc.Y) {
 		pipelines[sc.X][sc.Y] = "7"
-	}
-
-	for _, line := range pipelines {
-		fmt.Println(line)
 	}
 	return pipelines
 }

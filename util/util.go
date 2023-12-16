@@ -185,3 +185,27 @@ func RemoveFromSlice[T comparable](item T, slice []T) []T {
 	}
 	return res
 }
+
+func Transpose[T any](grid [][]T) [][]T {
+	nCols := len(grid)
+	nRows := len(grid[0])
+	res := make([][]T, nRows)
+	for i := range res {
+		res[i] = make([]T, nCols)
+	}
+
+	for i := range res {
+		for j := range res[0] {
+			res[i][j] = grid[j][i]
+		}
+	}
+	return res
+}
+
+func ReadGrid(lines []string) [][]string {
+	var res [][]string
+	for _, line := range lines {
+		res = append(res, strings.Split(line, ""))
+	}
+	return res
+}

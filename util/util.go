@@ -209,3 +209,11 @@ func ReadGrid(lines []string) [][]string {
 	}
 	return res
 }
+
+func Map[T, R any](s []T, fn func(T) R) []R {
+	var res []R
+	for _, item := range s {
+		res = append(res, fn(item))
+	}
+	return res
+}

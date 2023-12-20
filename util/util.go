@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"slices"
 	"strconv"
 	"strings"
 )
@@ -202,6 +203,12 @@ func Transpose[T any](grid [][]T) [][]T {
 	return res
 }
 
+func Flip[T any](grid [][]T) {
+	for _, row := range grid {
+		slices.Reverse(row)
+	}
+}
+
 func ReadGrid(lines []string) [][]string {
 	var res [][]string
 	for _, line := range lines {
@@ -214,6 +221,16 @@ func Map[T, R any](s []T, fn func(T) R) []R {
 	var res []R
 	for _, item := range s {
 		res = append(res, fn(item))
+	}
+	return res
+}
+
+func ToString(g [][]string) string {
+	var res string
+	for _, row := range g {
+		for _, col := range row {
+			res += col
+		}
 	}
 	return res
 }

@@ -75,9 +75,10 @@ func dijkstra(grid [][]int, r, c, vdir, hdir, same, minsame, maxsame int) int {
 	for pq.Len() > 0 {
 		item := heap.Pop(&pq).(*Item)
 		cr, cc, cvdir, chdir, csame := unhash(item.value)
-		nbs := getOptions(grid, cr, cc, cvdir, chdir, csame, minsame, maxsame)
-
-		for _, nb := range nbs {
+		if cr == len(grid)-1 && cc == len(grid[0])-1 {
+			return item.priority
+		}
+		for _, nb := range getOptions(grid, cr, cc, cvdir, chdir, csame, minsame, maxsame) {
 			alt := dist[cr][cc][cvdir+1][chdir+1][csame] + grid[cr+nb.v][cc+nb.h]
 			s := 1
 			if cvdir == nb.v && chdir == nb.h {
@@ -91,19 +92,7 @@ func dijkstra(grid [][]int, r, c, vdir, hdir, same, minsame, maxsame int) int {
 			}
 		}
 	}
-	return getMin(dist[len(grid)-1][len(grid[0])-1])
-}
-
-func getMin(vdirs [][][]int) int {
-	res := math.MaxInt
-	for _, hdirs := range vdirs {
-		for _, sames := range hdirs {
-			for _, value := range sames {
-				res = min(res, value)
-			}
-		}
-	}
-	return res
+	panic("can't reach final node!")
 }
 
 func getOptions(grid [][]int, r, c, vdir, hdir, same, minsame, maxsame int) []Dir {
